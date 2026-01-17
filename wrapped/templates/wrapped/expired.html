@@ -1,0 +1,107 @@
+{% extends "wrapped/base.html" %}
+{% load static %}
+{% block title %}Expired Token{% endblock title %}
+
+{% block style %}
+<style>
+        body {
+            background: radial-gradient(circle at top, #1db95420, #020617 60%);
+            min-height: 100vh;
+            color: #f8fafc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .expired-card {
+            background: #020617;
+            border-radius: 24px;
+            padding: 50px;
+            max-width: 520px;
+            width: 100%;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+            text-align: center;
+            animation: fadeUp 0.8s ease forwards;
+        }
+
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .highlight {
+            color: #22c55e;
+        }
+
+        .btn-success {
+            background: #22c55e;
+            border: none;
+            padding: 14px 22px;
+            font-size: 1.05rem;
+            border-radius: 14px;
+        }
+
+        .btn-success:hover {
+            background: #16a34a;
+        }
+
+        .muted {
+            color: #94a3b8;
+        }
+
+        @media (max-width: 768px) {
+            .expired-card {
+            padding: 30px 20px;
+            margin: 20px;
+            }
+
+            .btn-success {
+            padding: 12px 18px;
+            font-size: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .expired-card {
+            padding: 20px 15px;
+            }
+
+            .btn-success {
+            padding: 10px 16px;
+            font-size: 0.95rem;
+            }
+        }
+
+    </style>
+{% endblock style %}
+
+{% block content %}
+<div class="expired-card">
+    <h1 class="fw-bold mb-3">
+        Wrapped Expired ⏳
+    </h1>
+
+    <p class="muted mb-4">
+        Your Spotify Wrapped session has expired for privacy reasons.
+    </p>
+
+    <p class="mb-4">
+        We don’t store your data, so once the session ends,
+        your results are automatically cleared.
+    </p>
+
+    <a href="{% url 'wrapped:upload' %}" class="btn btn-success">
+        Generate a New Wrapped 🎧
+    </a>
+
+    <p class="muted mt-4" style="font-size: 0.9rem;">
+        Tip: Upload your files again to instantly recreate your Wrapped.
+    </p>
+</div>
+{% endblock content %}
