@@ -1,0 +1,301 @@
+{% extends "wrapped/base.html" %}
+{% load static %}
+{% block title %}How to Get Your Spotify Data{% endblock title %}
+{% block style %}
+    <style>
+        body {
+            background: radial-gradient(circle at top, #1db95430, #020617 65%);
+            color: #f8fafc;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont;
+        }
+
+        .container {
+            max-width: 900px;
+        }
+
+        .card-dark {
+            background: #020617;
+            border-radius: 28px;
+            padding: 40px;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.6);
+        }
+
+        .step {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 25px;
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 0.6s ease-out;
+        }
+
+        .step.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .step-number {
+            background: #22c55e;
+            color: #020617;
+            font-weight: bold;
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-size: 1.2rem;
+        }
+
+        .highlight {
+            color: #22c55e;
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+            border: none;
+            padding: 16px 34px;
+            font-size: 1.1rem;
+            border-radius: 18px;
+            box-shadow: 0 10px 30px #22c55e50;
+            transition: all 0.3s ease;
+        }
+
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 40px #22c55e80;
+        }
+
+        .note {
+            background: #020617;
+            border-left: 5px solid #22c55e;
+            padding: 20px;
+            border-radius: 12px;
+            color: #cbd5f5;
+            margin-bottom: 40px;
+        }
+
+        .nav-btns {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+
+        footer {
+            padding: 60px 20px;
+            color: #94a3b8;
+            text-align: center;
+            font-size: 0.95rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 15px;
+            }
+
+            .card-dark {
+                padding: 25px;
+                border-radius: 16px;
+            }
+
+            .step {
+                gap: 15px;
+                margin-bottom: 20px;
+            }
+
+            .step-number {
+                width: 36px;
+                height: 36px;
+                font-size: 1rem;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .lead {
+                font-size: 1rem;
+            }
+
+            .nav-btns {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .nav-btns button {
+                width: 100%;
+            }
+
+            .btn-success {
+                padding: 12px 24px;
+                font-size: 1rem;
+            }
+
+            .note {
+                padding: 15px;
+                font-size: 0.9rem;
+            }
+
+            footer {
+                padding: 40px 15px;
+                font-size: 0.85rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .card-dark {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            .step-number {
+                width: 32px;
+                height: 32px;
+                font-size: 0.9rem;
+            }
+
+            .note {
+                padding: 12px;
+                border-left-width: 3px;
+            }
+        }
+    </style>
+    {% endblock style %}
+
+{% block content %}
+<div class="container py-5">
+
+    <div class="text-center mb-5">
+        <h1 class="display-5 fw-bold">
+            How to Get Your <span class="highlight">Spotify Data</span> 🎧
+        </h1>
+        <p class="lead text-secondary mt-3">
+            Spotify doesn’t show lifetime stats —  
+            but your data already contains them.
+        </p>
+    </div>
+
+    <div class="card-dark">
+
+        <div class="step active">
+            <div class="step-number">1</div>
+            <div>
+                Go to <strong>Spotify Account</strong><br>
+                <span class="text-secondary">account.spotify.com</span>
+            </div>
+        </div>
+
+        <div class="step">
+            <div class="step-number">2</div>
+            <div>
+                Open <strong>Privacy Settings</strong>
+            </div>
+        </div>
+
+        <div class="step">
+            <div class="step-number">3</div>
+            <div>
+                Request <strong>Extended Streaming History</strong>
+            </div>
+        </div>
+
+        <div class="step">
+            <div class="step-number">4</div>
+            <div>
+                Wait for Spotify’s email<br>
+                <span class="text-secondary">(Usually a few days)</span>
+            </div>
+        </div>
+
+        <div class="step">
+            <div class="step-number">5</div>
+            <div>
+                Download the <strong>ZIP file</strong>
+            </div>
+        </div>
+
+        <div class="step">
+            <div class="step-number">6</div>
+            <div>
+                Extract the <strong>JSON files</strong>
+            </div>
+        </div>
+
+        <div class="step">
+            <div class="step-number">7</div>
+            <div>
+                Upload them on the next page 🎉<br>
+                <span class="text-secondary">(Don't Upload the Read Me First pdf that comes with it)</span>
+            </div>
+        </div>
+
+        <div class="nav-btns">
+            <button class="btn btn-success" id="prevBtn" disabled>← Previous</button>
+            <button class="btn btn-success" id="nextBtn">Next →</button>
+        </div>
+
+    </div>
+
+    <div class="note">
+        🔒 <strong>Your privacy matters.</strong><br>
+        Your Spotify data is processed locally and deleted immediately.
+        Nothing is stored. Nothing is tracked.
+    </div>
+
+    <div class="text-center mb-5">
+        <a href="{% url 'wrapped:upload' %}">
+            <button class="btn btn-success btn-lg">
+                Upload My Spotify Data →
+            </button>
+        </a>
+    </div>
+
+</div>
+
+<script>
+    const steps = document.querySelectorAll('.step');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    let current = 0;
+
+    function updateSteps() {
+        steps.forEach((step, index) => {
+            step.classList.toggle('active', index === current);
+        });
+
+        prevBtn.disabled = current === 0;
+        nextBtn.disabled = current === steps.length - 1;
+    }
+
+    nextBtn.addEventListener('click', () => {
+        if (current < steps.length - 1) {
+            current++;
+            updateSteps();
+        }
+    });
+
+    prevBtn.addEventListener('click', () => {
+        if (current > 0) {
+            current--;
+            updateSteps();
+        }
+    });
+
+    // Optional: animate all steps on scroll
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if(entry.isIntersecting){
+                entry.target.classList.add('active');
+            }
+        });
+    }, { threshold: 0.1 });
+
+    steps.forEach(step => observer.observe(step));
+
+</script>
+{% endblock content %}

@@ -1,0 +1,38 @@
+{% load humanize %}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Upload Successful</title>
+    <meta charset="utf-8">
+</head>
+<body>
+    <h1>Upload Successful 🎉</h1>
+
+    <p>
+        {{ file_count|intcomma }} Spotify history files uploaded successfully.
+    </p>
+
+    <p>
+        Processing will begin next.
+    </p>
+
+    <h1>Processing Complete 🎧</h1>
+
+    <p>
+        Total records processed: <strong>{{ file_count|intcomma }}</strong>
+    </p>
+
+    <p>
+        Total listening hours: <strong>{{ total_hours|floatformat:0|intcomma }}</strong>
+    </p>
+
+     <p>
+        Total listening Minutes: <strong>{{ total_minutes|floatformat:0|intcomma }}</strong>
+    </p>
+
+    <p>
+        Your files were automatically deleted after processing.
+    </p>
+</body>
+</html>

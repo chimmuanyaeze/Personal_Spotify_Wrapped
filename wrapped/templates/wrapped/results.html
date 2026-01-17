@@ -1,0 +1,431 @@
+{% extends "wrapped/base.html" %}
+{% load humanize %}
+ {% block title %}Your Spotify Lifetime Wrapped{% endblock title %} 
+
+{% block style %}
+    <style>
+        body {
+            background: #0f172a;
+            color: #f8fafc;
+        }
+
+        .wrapped-card {
+            background: #020617;
+            border-radius: 5px;
+            padding: 30px;
+            margin-bottom: 30px;
+            animation: fadeUp 0.8s ease forwards;
+        }
+
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .highlight {
+            color: #22c55e;
+            animation: pulse 1.8s infinite alternate;
+    }
+
+        @keyframes pulse {
+            from { opacity: 0.8; }
+            to { opacity: 1; }
+        }
+
+        .wrapped-scene {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 0.8s ease;
+        }
+
+        .wrapped-scene.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        
+        .genre-pop {
+            box-shadow: 0 0 40px rgba(34, 197, 94, 0.35);
+        }
+
+        .genre-pop {
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+        }
+
+        .genre-hiphop {
+            background: linear-gradient(135deg, #7c3aed, #4c1d95);
+        }
+
+        .genre-gospel {
+            background: linear-gradient(135deg, #facc15, #ca8a04);
+        }
+
+        #progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 6px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.1);
+            z-index: 9999;
+        }
+
+        #progress-fill {
+            height: 100%;
+            width: 0%;
+            background: #22c55e;
+            transition: width 0.4s ease;
+        }
+
+        .wrapped-card:hover {
+            transform: scale(1.02);
+            transition: transform 0.3s ease;
+        }
+
+        footer {
+            padding: 60px 20px;
+            color: #94a3b8;
+            text-align: center;
+            font-size: 0.95rem;
+        }
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .wrapped-card {
+            padding: 20px;
+            margin-bottom: 20px;
+            }
+
+            h1.display-4 {
+            font-size: 2rem;
+            }
+
+            h2 {
+            font-size: 1.5rem;
+            }
+
+            .display-5 {
+            font-size: 1.5rem;
+            }
+
+            .display-6 {
+            font-size: 1.25rem;
+            }
+
+            ol, ul {
+            padding-left: 20px;
+            }
+
+            li {
+            margin-bottom: 10px;
+            }
+
+            .btn {
+            width: 100%;
+            }
+
+            footer {
+            padding: 40px 10px;
+            font-size: 0.85rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .wrapped-card {
+            padding: 15px;
+            border-radius: 3px;
+            }
+
+            h1.display-4 {
+            font-size: 1.5rem;
+            }
+
+            h2 {
+            font-size: 1.25rem;
+            }
+
+            .display-5 {
+            font-size: 1.25rem;
+            }
+
+            .container {
+            padding: 0 10px;
+            }
+
+            body {
+            font-size: 0.95rem;
+            }
+        }
+    </style>
+    {% endblock style %}
+
+    
+    {% block content %}
+    <body class="genre-{{ song_data.top_genre }}">
+        <div id="progress-bar">
+            <div id="progress-fill"></div>
+        </div>
+
+        <div class="container py-5">
+            <div class="text-center mb-5 wrapped-scene">
+                <h1 class="display-4 fw-bold">Your Spotify Lifetime Wrapped 🎧</h1>
+                <p class="lead text-secondary">
+                    A journey through your listening history
+                </p>
+            </div>
+
+            <div class="wrapped-card text-center wrapped-scene">
+                <h2>Total Listening Time</h2>
+                <p class="display-5 fw-bold highlight">
+                    {{ total_minutes|floatformat:0|intcomma }} minutes
+                </p>
+                <p class="display-5 fw-bold highlight">
+                    <span style="color:white; font-weight: normal;">which is</span> {{ song_data.total_hours }} hours
+                </p>
+                <p class="display-5 fw-bold highlight">
+                    <span style="color:white; font-weight: normal;">Congratulations 🥳 you have listen to songs on spotify for </span> {{ total_days|floatformat:0|intcomma }} days 🤯
+                </p>
+            </div>  
+
+            <div class="wrapped-card wrapped-scene">
+                <h2>🎵 Your All-Time Song</h2>
+
+                {% if song_data.champion %}
+                    <h3 class="highlight">
+                        {{ song_data.champion.track_name }}
+                    </h3>
+                    <p>
+                        by {{ song_data.champion.artist_name }}
+                    </p>
+                    <p>
+                        Played {{ song_data.champion.plays }} times
+                    </p>
+                {% else %}
+                    <p>No song data available.</p>
+                {% endif %}
+            </div>
+
+            <div class="wrapped-card wrapped-scene">
+                <h2>🎤 Your All-Time Artist</h2>
+
+                {% if artist_data.champion %}
+                    <h3 class="highlight">
+                        {{ artist_data.champion.artist_name }}
+                    </h3>
+                    <p>
+                        {{ artist_data.champion.total_plays }} plays across
+                        {{ artist_data.champion.unique_songs }} songs
+                    </p>
+                {% else %}
+                    <p>No artist data available.</p>
+                {% endif %}
+            </div>
+
+            <div class="wrapped-card wrapped-scene">
+                <h2>🔥 Top 10 Songs</h2>
+
+                <ol>
+                    {% for row in song_data.top_songs %}
+                        <li>
+                            <strong>{{ row.track_name }}</strong>
+                            – {{ row.artist_name }}
+                            ({{ row.plays }} plays)
+                        </li>
+                    {% endfor %}
+                </ol>
+            </div>
+
+            <div class="wrapped-card wrapped-scene">
+                <h2>🏆 Top Artists</h2>
+
+                <ol>
+                    {% for row in artist_data.top_artists %}
+                        <li>
+                            <strong>{{ row.artist_name }}</strong>
+                            – {{ row.total_plays }} plays
+                        </li>
+                    {% endfor %}
+                </ol>
+            </div>
+
+            {% if podcast_data %}
+                <div class="wrapped-card wrapped-scene">
+                    <h2>🎙 Podcasts</h2>
+
+                    <p>
+                        Total listening time:
+                        <strong>{{ podcast_data.total_hours }} hours</strong>
+                    </p>
+
+                    <ul>
+                        {% for row in podcast_data.top_podcasts %}
+                            <li>
+                                {{ row.episode_show_name }} ({{ row.plays }} plays)
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+
+            <div class="wrapped-card wrapped-scene">
+                <h2>🕒 Your Listening Timeline</h2>
+
+                <p>
+                    First play:
+                    <strong>{{ time_data.first_play }}</strong>
+                </p>
+
+                <p>
+                    Most recent play:
+                    <strong>{{ time_data.last_play }}</strong>
+                </p>
+            </div>
+
+        </div>
+        <div class="wrapped-card wrapped-scene text-center" id="share-card">
+            <h2>Your Spotify Lifetime Wrapped 🎧</h2>
+            <p class="display-6 highlight">
+                {{ song_data.total_hours }} hours of music
+            </p>
+            <p>
+                Top Artist: {{ artist_data.champion.artist_name }}
+            </p>
+            <button class="btn btn-success mt-3">
+                Share Your Wrapped
+            </button>
+            <p class="text-secondary mt-2">
+                Perfect for Instagram, X, and WhatsApp
+            </p>
+        </div>
+        <div class="wrapped-card wrapped-scene">
+            <h2>📆 Your Music Evolution</h2>
+
+            <input type="range" min="0" max="{{ yearly_data|length|add:'-1' }}" value="0"
+                id="yearSlider" class="form-range">
+
+            <div id="yearStats"></div>
+        </div>
+
+        {% if skipped_data %}
+        <div class="wrapped-card wrapped-scene">
+            <h2>⏭ Your Most Skipped Songs</h2>
+
+            <ol>
+                {% for row in skipped_data %}
+                    <li>
+                        {{ row.track_name }} – {{ row.artist_name }}
+                        ({{ row.skips }} skips)
+                    </li>
+                {% endfor %}
+            </ol>
+        </div>
+        {% else %}
+            <p>No skipped tracks found 🎉. You are a legend 🧎🏽🙇🏽‍♂️🧎🏽‍➡️</p>
+        {% endif %}
+
+        <div class="wrapped-card wrapped-scene">
+            <h2>📱 How You Listen</h2>
+
+            {% for p in platform_data %}
+                <p>
+                    <strong>{{ p.platform|upper }}</strong> — {{ p.plays }} plays
+                </p>
+            {% endfor %}
+        </div>
+        <div class="wrapped-card wrapped-scene">
+            <h2>🌍 Where You Listened From</h2>
+
+            {% for c in country_data|slice:":5" %}
+                <p>{{ c.conn_country }} — {{ c.plays }} plays</p>
+            {% endfor %}
+        </div>
+        <div class="wrapped-card wrapped-scene text-center">
+            <h2>Your Audio Personality</h2>
+            <h1 class="highlight">{{ personality }}</h1>
+        </div>
+        <p class="text-secondary mt-2">
+            Looks like music is part of your daily rhythm.
+        </p>
+
+
+        <script>
+            const scenes = document.querySelectorAll('.wrapped-scene');
+            let currentScene = 0;
+            const AUTO_ADVANCE_MS = 4500; // 4.5 seconds
+
+            function showScene(index) {
+                if (scenes[index]) {
+                    scenes[index].classList.add('active');
+                    scenes[index].scrollIntoView({ behavior: 'smooth' });
+                    updateProgress();
+                }
+            }
+
+            function nextScene() {
+                if (currentScene < scenes.length - 1) {
+                    currentScene++;
+                    showScene(currentScene);
+                }
+            }
+
+            function startAutoAdvance() {
+                setInterval(() => {
+                    nextScene();
+                }, AUTO_ADVANCE_MS);
+            }
+
+            function updateProgress() {
+                const percent = ((currentScene + 1) / scenes.length) * 100;
+                document.getElementById('progress-fill').style.width = percent + '%';
+            }
+
+            // Click anywhere to advance instantly
+            document.addEventListener('click', nextScene);
+
+            showScene(0);
+            startAutoAdvance();
+
+            function exportWrapped() {
+                const card = document.getElementById('share-card');
+
+                html2canvas(card, { scale: 2 }).then(canvas => {
+                    const link = document.createElement('a');
+                    link.download = 'spotify_lifetime_wrapped.png';
+                    link.href = canvas.toDataURL();
+                    link.click();
+                });
+            }
+            const yearlyData = {{ yearly_data|safe }};
+            const yearStats = document.getElementById('yearStats');
+            const slider = document.getElementById('yearSlider');
+
+            function renderYear(index) {
+                const y = yearlyData[index];
+                yearStats.innerHTML = `
+                    <h3 class="highlight">${y.year}</h3>
+                    <p>${y.hours.toFixed(1)} hours</p>
+                    <p>${y.plays} plays</p>
+                    <p>${y.unique_artists} artists</p>
+                `;
+            }
+
+            slider.addEventListener('input', e => renderYear(e.target.value));
+            renderYear(0);
+            let startX = 0;
+
+            document.addEventListener('touchstart', e => {
+                startX = e.touches[0].clientX;
+            });
+
+            document.addEventListener('touchend', e => {
+                const endX = e.changedTouches[0].clientX;
+                if (startX - endX > 50) nextScene();
+            });
+        </script>
+    </body>
+{% endblock content %}

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Spotify Lifetime Wrapped{% endblock title %}</title>
+    <meta name="description"
+      content="Upload your Spotify Streaming History and discover your all-time top songs, artists, and podcasts. No login. Privacy-first.">
+    <meta name="robots" content="index, follow">
+    <meta property="og:title" content="Spotify Lifetime Wrapped 🎧">
+    <meta property="og:description" content="Discover your all-time Spotify stats in a beautiful Wrapped-style experience.">
+    <meta property="og:image" content="https://yourdomain.com/static/images/og-image.png">
+    <meta property="og:url" content="https://yourdomain.com">
+    <meta property="og:type" content="website">
+    
+    {% load static %}
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    {% block style %}
+    {% endblock style %}
+     
+
+</head>
+ 
+<body>
+   
+    
+        {% block content %}
+        {% endblock content %}
+    
+
+    <footer>
+        <p>Built for music lovers 🎧 • Not affiliated with Spotify<br>&copy; 2026 Spotify Lifetime Wrapped. All rights reserved.</p>
+    </footer>
+</body>
+</html>
